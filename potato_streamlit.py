@@ -223,7 +223,7 @@ def load_and_preprocess_image(image):
     return img_array
 
 # Path to the pickle file
-file_path = "potato_pickle_fianl (1).pkl"
+file_path = "potato_pickle_final (1).pkl"
 
 # Check if file exists and load the model
 if os.path.exists(file_path):
