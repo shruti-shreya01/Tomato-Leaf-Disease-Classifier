@@ -223,7 +223,7 @@ def load_and_preprocess_image(image):
     return img_array
 
 # Path to the pickle file
-file_path = "potato_pickle_final (1).pkl"
+file_path = "potato_pickle_fianl (1).pkl"
 
 # Check if file exists and load the model
 if os.path.exists(file_path):
@@ -266,21 +266,6 @@ if uploaded_file is not None:
 
     # Display the uploaded image
     st.image(uploaded_file, caption="Uploaded Image", use_column_width=True)
-    st.write("Classifying...")
-            # Preprocess the image
-    # processed_image = load_and_preprocess_image(img_array)
-
-    #     # Make prediction
-    # predictions = model.predict(processed_image)
-    #         # Ensure the predictions are correctly normalized
-    # predictions = tf.nn.softmax(predictions).numpy()  # Use softmax to normalize
-
-    # confidence = np.max(predictions) * 100
-    # predicted_class = class_names[np.argmax(predictions)]
-
-    #     # Display prediction
-    # st.write(f"*Predicted Class:* {predicted_class}")
-    # st.write(f"*Confidence:* {confidence:.2f}%")
 
     # Map predicted class to the disease name
     disease_name = class_names.get(predicted_class, "Unknown")
