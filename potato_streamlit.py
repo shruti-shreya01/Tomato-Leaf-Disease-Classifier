@@ -121,7 +121,6 @@
 
 
 
-
 import streamlit as st
 import tensorflow as tf
 from PIL import Image, ImageOps
@@ -135,43 +134,34 @@ st.write("""
     Upload an image of a potato leaf, and the model will predict the disease.
 """)
 
+# Load the model from pickle file
+@st.cache_resource
+def load_model_from_pickle(pickle_path):
+    try:
+        with open(pickle_path, "rb") as f:
+            model = pickle.load(f)
+        
+        # Compile the model if not already compiled
+        if not hasattr(model, "optimizer"):
+            model.compile(
+                optimizer='adam',
+                loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=False),
+                metrics=['accuracy']
+            )
+        return model
+    except Exception as e:
+        st.error(f"An error occurred while loading the model: {e}")
+        return None
+
 # Path to the pickle file
 model_path = "potato_pickle_final (1).pkl"
-
-# Initialize model variable
-model = None
 
 # Check if the file exists
 if not os.path.exists(model_path):
     st.error(f"File not found: {model_path}")
 else:
-    try:
-        # Load the model from the pickle file
-        with open(model_path, 'rb') as f:
-            model_dict = pickle.load(f)  # Load the model as a dictionary
-
-        # Debugging: Print out the type and keys of the loaded dictionary
-        st.write("Loaded model dictionary:", model_dict)
-
-        # Check the structure of the loaded model
-        if 'model' in model_dict:
-            model = model_dict['model']  # Access the model from the dictionary
-            # Check if you have saved weights separately
-            if 'model_weights' in model_dict:
-                model.load_weights(model_dict['model_weights'])  # Load weights if present
-
-            # If the model was saved without compilation, compile it here
-            if not hasattr(model, "optimizer"):
-                model.compile(
-                    optimizer='adam',
-                    loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=False),
-                    metrics=['accuracy']
-                )
-        else:
-            st.error("Model not found in the pickle file. Please check the saved model.")
-
-    except Exception as e:
-        st.error(f"An error occurred while loading the model: {e}")
+    # Load the model
+    model = load_model_from_pickle(model_path)
 
 # Define class names (modify these based on your dataset)
 class_names = ['Healthy', 'Early Blight', 'Late Blight']
