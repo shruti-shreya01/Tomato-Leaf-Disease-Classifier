@@ -163,12 +163,12 @@ def load_model_from_pickle(pickle_path):
 model = load_model_from_pickle("potato_pickle_final (1).pkl")
 
 # Define class names (modify these based on your dataset)
-class_names = ['Healthy', 'Early Blight', 'Late Blight', 'Leaf Curl', 'Other Diseases']
+class_names = ['Healthy', 'Early Blight', 'Late Blight']
 
 # Function to preprocess the image
 def preprocess_image(image: Image.Image) -> np.ndarray:
     IMAGE_SIZE = 256  # Must match the image size used during training
-    image = ImageOps.fit(image, (IMAGE_SIZE, IMAGE_SIZE), Image.ANTIALIAS)
+    image = ImageOps.fit(image, (IMAGE_SIZE, IMAGE_SIZE), Image.LANCZOS)
     image_array = np.asarray(image)
     
     # Convert RGBA to RGB if necessary
