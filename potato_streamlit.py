@@ -127,7 +127,7 @@ def load_model_from_pickle(pickle_path):
     model = tf.keras.models.model_from_json(data["architecture"])
     
     # Load the weights from the file
-    model.load_weights(data["model_weights"])
+    model.load_weights(data["weights"])
 
     # Compile the model if needed
     model.compile(
