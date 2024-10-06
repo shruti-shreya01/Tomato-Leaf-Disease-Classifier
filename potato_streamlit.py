@@ -148,9 +148,9 @@ else:
             model_dict = pickle.load(f)  # Load the model as a dictionary
 
         # Check if the dictionary contains the model and its weights
-        if 'model' in model_dict and 'model_weights' in model_dict:
+        if 'model' in model_dict and 'model_weights.weights.h5' in model_dict:
             model = model_dict['model']  # Access the model from the dictionary
-            model.load_weights(model_dict['model_weights'])  # Load weights
+            model.load_weights(model_dict['model_weights.weights.h5'])  # Load weights
         else:
             st.error("Model or weights not found in the pickle file. Please check the saved model.")
 
