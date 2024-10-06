@@ -193,7 +193,7 @@ if uploaded_file is not None:
 
 # Add a Rerun button to allow users to reset the app
 if st.button("🔄 Rerun"):
-    st.experimental_rerun()
+    st.rerun()
 
 # Add some padding at the end of the app
 st.markdown("<br><br>", unsafe_allow_html=True)
