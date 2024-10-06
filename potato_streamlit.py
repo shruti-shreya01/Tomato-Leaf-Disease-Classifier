@@ -268,19 +268,19 @@ if uploaded_file is not None:
     st.image(uploaded_file, caption="Uploaded Image", use_column_width=True)
     st.write("Classifying...")
             # Preprocess the image
-    processed_image = load_and_preprocess_image(img_array)
+    # processed_image = load_and_preprocess_image(img_array)
 
-        # Make prediction
-    predictions = model.predict(processed_image)
-            # Ensure the predictions are correctly normalized
-    predictions = tf.nn.softmax(predictions).numpy()  # Use softmax to normalize
+    #     # Make prediction
+    # predictions = model.predict(processed_image)
+    #         # Ensure the predictions are correctly normalized
+    # predictions = tf.nn.softmax(predictions).numpy()  # Use softmax to normalize
 
-    confidence = np.max(predictions) * 100
-    predicted_class = class_names[np.argmax(predictions)]
+    # confidence = np.max(predictions) * 100
+    # predicted_class = class_names[np.argmax(predictions)]
 
-        # Display prediction
-    st.write(f"*Predicted Class:* {predicted_class}")
-    st.write(f"*Confidence:* {confidence:.2f}%")
+    #     # Display prediction
+    # st.write(f"*Predicted Class:* {predicted_class}")
+    # st.write(f"*Confidence:* {confidence:.2f}%")
 
     # Map predicted class to the disease name
     disease_name = class_names.get(predicted_class, "Unknown")
