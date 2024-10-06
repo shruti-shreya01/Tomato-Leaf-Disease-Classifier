@@ -121,24 +121,21 @@
 
 
 import streamlit as st
-import tensorflow as tf
+from tensorflow.keras.models import load_model
 from PIL import Image, ImageOps
 import numpy as np
-import pickle
 import os
 
 # Set the title of the app
 st.title("IIIT Lucknow - Potato Disease Prediction")
 st.write("""Upload an image of a potato leaf, and the model will predict the disease.""")
 
-# Path to the pickle file
-model_path = "potato_pickle_final (1).pkl"
+# Path to the model
+model_path = "model_weights.weights.h5"
 
 # Load the model
 if os.path.exists(model_path):
-    with open(model_path, 'rb') as f:
-        model = pickle.load(f)
-        st.write(f"Model type: {type(model)}")  # Check the type of loaded model
+    model = load_model(model_path)  # Load the Keras model
 else:
     st.error(f"File not found: {model_path}")
 
@@ -170,15 +167,13 @@ if uploaded_file is not None:
         processed_image = preprocess_image(image)
 
         # Make prediction
-        if isinstance(model, tf.keras.Model):  # Check if model is a Keras model
-            predictions = model.predict(processed_image)
-            confidence = np.max(predictions) * 100
-            predicted_class = class_names[np.argmax(predictions)]
-            st.write(f"*Predicted Class:* {predicted_class}")
-            st.write(f"*Confidence:* {confidence:.2f}%")
-        else:
-            st.error("Loaded model is not a valid Keras model.")
+        predictions = model.predict(processed_image)
+        confidence = np.max(predictions) * 100
+        predicted_class = class_names[np.argmax(predictions)]
+
+        # Display prediction
+        st.write(f"*Predicted Class:* {predicted_class}")
+        st.write(f"*Confidence:* {confidence:.2f}%")
 
     except Exception as e:
         st.error(f"An error occurred during prediction: {e}")
-
