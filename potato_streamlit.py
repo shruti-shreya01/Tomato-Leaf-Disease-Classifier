@@ -138,6 +138,9 @@ st.write("""
 # Path to the pickle file
 model_path = "potato_pickle_final (1).pkl"
 
+# Initialize model variable
+model = None
+
 # Check if the file exists
 if not os.path.exists(model_path):
     st.error(f"File not found: {model_path}")
@@ -147,20 +150,25 @@ else:
         with open(model_path, 'rb') as f:
             model_dict = pickle.load(f)  # Load the model as a dictionary
 
-        # Check if the dictionary contains the model and its weights
-        if 'model' in model_dict and 'model_weights.weights.h5' in model_dict:
-            model = model_dict['model']  # Access the model from the dictionary
-            model.load_weights(model_dict['model_weights.weights.h5'])  # Load weights
-        else:
-            st.error("Model or weights not found in the pickle file. Please check the saved model.")
+        # Debugging: Print out the type and keys of the loaded dictionary
+        st.write("Loaded model dictionary:", model_dict)
 
-        # If the model was saved without compilation, compile it here
-        if not hasattr(model, "optimizer"):
-            model.compile(
-                optimizer='adam',
-                loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=False),
-                metrics=['accuracy']
-            )
+        # Check the structure of the loaded model
+        if 'model' in model_dict:
+            model = model_dict['model']  # Access the model from the dictionary
+            # Check if you have saved weights separately
+            if 'model_weights' in model_dict:
+                model.load_weights(model_dict['model_weights'])  # Load weights if present
+
+            # If the model was saved without compilation, compile it here
+            if not hasattr(model, "optimizer"):
+                model.compile(
+                    optimizer='adam',
+                    loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=False),
+                    metrics=['accuracy']
+                )
+        else:
+            st.error("Model not found in the pickle file. Please check the saved model.")
 
     except Exception as e:
         st.error(f"An error occurred while loading the model: {e}")
@@ -185,7 +193,7 @@ def preprocess_image(image: Image.Image) -> np.ndarray:
 # File uploader allows users to upload images
 uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "jpeg", "png"])
 
-if uploaded_file is not None:
+if uploaded_file is not None and model is not None:
     try:
         # Display the uploaded image
         image = Image.open(uploaded_file).convert('RGB')
