@@ -140,10 +140,11 @@ def load_model_from_pickle(pickle_path):
     try:
         with open(pickle_path, "rb") as f:
             model_dict = pickle.load(f)
-        
-        # Check if the model is in the dictionary
-        if 'model' in model_dict:
+
+        # Check if the model and weights are in the dictionary
+        if 'model' in model_dict and 'weights' in model_dict:
             model = model_dict['model']
+            model.load_weights(model_dict['weights'])  # Load weights
             # Compile the model if not already compiled
             if not hasattr(model, "optimizer"):
                 model.compile(
@@ -153,7 +154,7 @@ def load_model_from_pickle(pickle_path):
                 )
             return model
         else:
-            st.error("Model not found in the pickle file. Please check how the model is saved.")
+            st.error("Model or weights not found in the pickle file. Please check how the model is saved.")
             return None
     except Exception as e:
         st.error(f"An error occurred while loading the model: {e}")
@@ -220,4 +221,5 @@ if uploaded_file is not None and model is not None:
 
     except Exception as e:
         st.error(f"An error occurred during prediction: {e}")
+
 
