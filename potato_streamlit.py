@@ -147,7 +147,7 @@ else:
     st.error(f"File not found: {model_weights_path}")
 
 # Define class names
-class_names = ['Healthy', 'Early Blight', 'Late Blight', 'Leaf Curl', 'Other Diseases']
+class_names = ['Healthy', 'Early Blight', 'Late Blight']
 
 # Function to preprocess the image
 def preprocess_image(image: Image.Image) -> np.ndarray:
