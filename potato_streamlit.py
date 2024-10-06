@@ -143,9 +143,16 @@ if not os.path.exists(model_path):
     st.error(f"File not found: {model_path}")
 else:
     try:
-        # Load the model directly from the pickle file
+        # Load the model from the pickle file
         with open(model_path, 'rb') as f:
-            model = pickle.load(f)  # Directly load the model object
+            model_dict = pickle.load(f)  # Load the model as a dictionary
+
+        # Check if the dictionary contains the model and its weights
+        if 'model' in model_dict and 'model_weights' in model_dict:
+            model = model_dict['model']  # Access the model from the dictionary
+            model.load_weights(model_dict['model_weights'])  # Load weights
+        else:
+            st.error("Model or weights not found in the pickle file. Please check the saved model.")
 
         # If the model was saved without compilation, compile it here
         if not hasattr(model, "optimizer"):
