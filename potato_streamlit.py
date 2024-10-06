@@ -148,12 +148,12 @@ else:
 
     # Check if the dictionary contains the model
     if 'model' in model_dict:
-        model = model_dict['model']  # Access the model from the dictionary
+        model = model_dict['model_weights.weights.h5']  # Access the model from the dictionary
     else:
         st.error("Model not found in the pickle file. Please check the saved model.")
 
 # Define class names (modify these based on your dataset)
-class_names = ['Healthy', 'Early Blight', 'Late Blight', 'Leaf Curl', 'Other Diseases']
+class_names = ['Healthy', 'Early Blight', 'Late Blight']
 
 # Function to preprocess the image
 def preprocess_image(image: Image.Image) -> np.ndarray:
