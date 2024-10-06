@@ -24,14 +24,28 @@ def load_model_from_pickle(pickle_path):
         )
     return model
 
-import pickle
+# import pickle
+
+# # Path to the pickle file
+# model_path = r"C:\Users\shrey\Downloads\potato_pickle_final (1).pkl"
+
+# # Load the model
+# with open(model_path, 'rb') as f:
+#     model = pickle.load(f)
+
+import os
 
 # Path to the pickle file
-model_path = r"C:\Users\shrey\Downloads\potato_pickle_final (1).pkl"
+model_path = "potato_pickle_final (1).pkl"
 
-# Load the model
-with open(model_path, 'rb') as f:
-    model = pickle.load(f)
+# Check if the file exists
+if not os.path.exists(model_path):
+    st.error(f"File not found: {model_path}")
+else:
+    # Load the model
+    with open(model_path, 'rb') as f:
+        model = pickle.load(f)
+
 
 # Define class names (modify these based on your dataset)
 class_names = ['Healthy', 'Early Blight', 'Late Blight', 'Leaf Curl', 'Other Diseases']
