@@ -234,7 +234,7 @@ if os.path.exists(file_path):
     model = tf.keras.models.model_from_json(data["architecture"])
 else:
     st.error(f"Model file not found at path: {file_path}")
-    st.stop()  # Stop execution if file is not found
+    st.stop()
 
 class_names = {0: "Early Blight", 1: "Late Blight", 2: "Healthy"}
 
@@ -244,12 +244,12 @@ if "prediction" not in st.session_state:
 if "confidence" not in st.session_state:
     st.session_state["confidence"] = None
 
-# Streamlit app interface
-st.title("Potato Leaf Disease Classification")
-st.write("Upload an image of a potato leaf to classify the disease.")
+# Enhanced UI
+st.markdown("<h1 style='text-align: center; color: green;'>🍃 Potato Leaf Health Check 🍃</h1>", unsafe_allow_html=True)
+st.write("Welcome farmers! Upload a photo of your potato leaf and let our AI help you diagnose its health.")
 
 # File uploader for image input
-uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "jpeg", "png"], key="uploaded_file")
+uploaded_file = st.file_uploader("Select an image of a potato leaf...", type=["jpg", "jpeg", "png"], key="uploaded_file")
 
 if uploaded_file is not None:
     # Load and preprocess the uploaded image
@@ -258,7 +258,7 @@ if uploaded_file is not None:
     # Predict the class of the leaf disease
     prediction = model.predict(img_array)
     predicted_class = np.argmax(prediction, axis=1)[0]
-    confidence = np.max(prediction)  # Confidence score
+    confidence = np.max(prediction) * 100  # Confidence score in percentage
 
     # Store results in session state
     st.session_state["prediction"] = predicted_class
@@ -270,31 +270,32 @@ if uploaded_file is not None:
     # Map predicted class to the disease name
     disease_name = class_names.get(predicted_class, "Unknown")
 
-    # Log raw prediction
-    print("Raw Prediction:", prediction)  # Log raw prediction
-    # Log predicted class and confidence
-    print(f"Predicted Class: {predicted_class}, Confidence: {confidence}")
+    # Show prediction results
+    st.markdown(f"### 🌿 Predicted Disease: **{disease_name}**")
+    st.markdown(f"### 🔍 Confidence Score: **{confidence:.2f}%**")
 
-    # Display the results in Streamlit
-    st.write(f"Predicted Disease: **{disease_name}**")
-    st.write(f"Confidence Score: **{confidence:.2f}**")
+    # Additional Tips for Farmers
+    st.markdown("#### 🛠 Tips:")
+    if predicted_class == 0:  # Early Blight
+        st.write("⚠️ Early Blight detected. Consider using fungicides and practicing crop rotation.")
+    elif predicted_class == 1:  # Late Blight
+        st.write("⚠️ Late Blight detected. Immediate attention is required, use disease-resistant potato varieties.")
+    elif predicted_class == 2:  # Healthy
+        st.write("✅ Your leaf is healthy! Keep up the good farming practices.")
 
+    # Optional: Display a pie chart with prediction probabilities
+    st.write("### 🔢 Prediction Probabilities:")
+    prob_df = {class_names[i]: float(prediction[0][i]) * 100 for i in range(len(class_names))}
+    st.bar_chart(prob_df)
 
+# Sidebar enhancements
+st.sidebar.title("About the Disease Classifier")
+st.sidebar.info("This tool uses AI to detect common diseases in potato leaves. It's designed to help farmers identify potential issues early.")
 
+st.sidebar.subheader("Disease Types")
+st.sidebar.write("🌱 **Early Blight:** A common potato disease caused by a fungus.")
+st.sidebar.write("🌱 **Late Blight:** A serious disease that can devastate potato crops.")
+st.sidebar.write("🌱 **Healthy:** No signs of disease detected.")
 
-# Use a button to rerun the app conditionally
-if st.button("Rerun"):
-    # Check if necessary state is initialized before rerunning
-    if st.session_state["prediction"] is not None and st.session_state["confidence"] is not None:
-        st.rerun()
-    else:
-        st.warning("Please upload an image first.")
-
-st.sidebar.title("About")
-st.sidebar.info("This app is designed to help farmers and agronomists identify diseases in potato leaves using AI technology.")
-
-st.sidebar.subheader("About the Model")
-st.sidebar.write("This model classifies potato leaf diseases with high accuracy. The classes are:")
-st.sidebar.write("- Early Blight")
-st.sidebar.write("- Late Blight")
-st.sidebar.write("- Healthy")
+st.sidebar.subheader("How It Works")
+st.sidebar.write("Upload a clear image of your potato leaf, and our AI will predict its health based on trained models.")
