@@ -142,15 +142,21 @@ model_path = "potato_pickle_final (1).pkl"
 if not os.path.exists(model_path):
     st.error(f"File not found: {model_path}")
 else:
-    # Load the model
-    with open(model_path, 'rb') as f:
-        model_dict = pickle.load(f)  # Load the model as a dictionary
+    try:
+        # Load the model directly from the pickle file
+        with open(model_path, 'rb') as f:
+            model = pickle.load(f)  # Directly load the model object
 
-    # Check if the dictionary contains the model
-    if 'model' in model_dict:
-        model = model_dict['model']  # Access the model from the dictionary
-    else:
-        st.error("Model not found in the pickle file. Please check the saved model.")
+        # If the model was saved without compilation, compile it here
+        if not hasattr(model, "optimizer"):
+            model.compile(
+                optimizer='adam',
+                loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=False),
+                metrics=['accuracy']
+            )
+
+    except Exception as e:
+        st.error(f"An error occurred while loading the model: {e}")
 
 # Define class names (modify these based on your dataset)
 class_names = ['Healthy', 'Early Blight', 'Late Blight']
@@ -203,3 +209,4 @@ if uploaded_file is not None:
 
     except Exception as e:
         st.error(f"An error occurred during prediction: {e}")
+
