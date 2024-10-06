@@ -287,6 +287,8 @@ if uploaded_file is not None:
     st.write("### 🔢 Prediction Probabilities:")
     prob_df = {class_names[i]: float(prediction[0][i]) * 100 for i in range(len(class_names))}
     st.bar_chart(prob_df)
+    if st.button("🔄 Rerun"):
+        st.rerun()
 
 # Sidebar enhancements
 st.sidebar.title("About the Disease Classifier")
