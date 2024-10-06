@@ -148,7 +148,7 @@ else:
 
     # Check if the dictionary contains the model
     if 'model' in model_dict:
-        model = model_dict['model_weights.weights.h5']  # Access the model from the dictionary
+        model = model_dict['model']  # Access the model from the dictionary
     else:
         st.error("Model not found in the pickle file. Please check the saved model.")
 
@@ -203,5 +203,3 @@ if uploaded_file is not None:
 
     except Exception as e:
         st.error(f"An error occurred during prediction: {e}")
-
-
