@@ -51,18 +51,36 @@ else:
 class_names = ['Healthy', 'Early Blight', 'Late Blight', 'Leaf Curl', 'Other Diseases']
 
 # Function to preprocess the image
+# def preprocess_image(image: Image.Image) -> np.ndarray:
+#     IMAGE_SIZE = 256  # Must match the image size used during training
+#     image = ImageOps.fit(image, (IMAGE_SIZE, IMAGE_SIZE), Image.ANTIALIAS)
+#     image_array = np.asarray(image)
+    
+#     # Convert RGBA to RGB if necessary
+#     if image_array.shape[-1] == 4:
+#         image_array = image_array[..., :3]
+    
+#     image_array = image_array / 255.0  # Rescale to [0,1]
+#     image_array = np.expand_dims(image_array, axis=0)  # Create batch axis
+#     return image_array
+
+from PIL import Image, ImageOps
+import numpy as np
+
+# Function to preprocess the image
 def preprocess_image(image: Image.Image) -> np.ndarray:
     IMAGE_SIZE = 256  # Must match the image size used during training
-    image = ImageOps.fit(image, (IMAGE_SIZE, IMAGE_SIZE), Image.ANTIALIAS)
+    image = ImageOps.fit(image, (IMAGE_SIZE, IMAGE_SIZE), Image.LANCZOS)  # Use LANCZOS instead of ANTIALIAS
     image_array = np.asarray(image)
-    
+
     # Convert RGBA to RGB if necessary
     if image_array.shape[-1] == 4:
         image_array = image_array[..., :3]
-    
-    image_array = image_array / 255.0  # Rescale to [0,1]
+
+    image_array = image_array / 255.0  # Rescale to [0, 1]
     image_array = np.expand_dims(image_array, axis=0)  # Create batch axis
     return image_array
+
 
 # File uploader allows users to upload images
 uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "jpeg", "png"])
