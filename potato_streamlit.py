@@ -268,7 +268,7 @@ if uploaded_file is not None:
     st.image(uploaded_file, caption="Uploaded Image", use_column_width=True)
     st.write("Classifying...")
             # Preprocess the image
-    processed_image = preprocess_image(image)
+    processed_image = load_and_preprocess_image(image)
 
         # Make prediction
     predictions = model.predict(processed_image)
