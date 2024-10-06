@@ -107,7 +107,7 @@ import pickle
 import os
 
 # Set the title of the app
-st.title("🌱 IIIT Lucknow - Potato Disease Prediction 🌱")
+st.title("🌱 Potato Disease Prediction 🌱")
 st.write("""
     Upload an image of a potato leaf, and the model will predict the disease.
 """)
@@ -194,7 +194,7 @@ if uploaded_file is not None:
 
 # Add a Rerun button to allow users to reset the app
 if st.button("🔄 Rerun"):
-    st.experimental_rerun()
+    st.rerun()
 
 # Add some padding at the end of the app
 st.markdown("<br><br>", unsafe_allow_html=True)
