@@ -134,21 +134,27 @@ st.write("""
     Upload an image of a potato leaf, and the model will predict the disease.
 """)
 
-# Load the model from pickle file
+# Load the model from the pickle file
 @st.cache_resource
 def load_model_from_pickle(pickle_path):
     try:
         with open(pickle_path, "rb") as f:
-            model = pickle.load(f)
+            model_dict = pickle.load(f)
         
-        # Compile the model if not already compiled
-        if not hasattr(model, "optimizer"):
-            model.compile(
-                optimizer='adam',
-                loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=False),
-                metrics=['accuracy']
-            )
-        return model
+        # Check if the model is in the dictionary
+        if 'model' in model_dict:
+            model = model_dict['model']
+            # Compile the model if not already compiled
+            if not hasattr(model, "optimizer"):
+                model.compile(
+                    optimizer='adam',
+                    loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=False),
+                    metrics=['accuracy']
+                )
+            return model
+        else:
+            st.error("Model not found in the pickle file. Please check how the model is saved.")
+            return None
     except Exception as e:
         st.error(f"An error occurred while loading the model: {e}")
         return None
@@ -164,7 +170,7 @@ else:
     model = load_model_from_pickle(model_path)
 
 # Define class names (modify these based on your dataset)
-class_names = ['Healthy', 'Early Blight', 'Late Blight']
+class_names = ['Healthy', 'Early Blight', 'Late Blight', 'Leaf Curl', 'Other Diseases']
 
 # Function to preprocess the image
 def preprocess_image(image: Image.Image) -> np.ndarray:
