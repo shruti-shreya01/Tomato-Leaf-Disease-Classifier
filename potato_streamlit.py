@@ -267,6 +267,11 @@ if uploaded_file is not None:
     # Display the uploaded image
     st.image(uploaded_file, caption="Uploaded Image", use_column_width=True)
     st.write("Classifying...")
+            # Preprocess the image
+    processed_image = preprocess_image(image)
+
+        # Make prediction
+    predictions = model.predict(processed_image)
             # Ensure the predictions are correctly normalized
     predictions = tf.nn.softmax(predictions).numpy()  # Use softmax to normalize
 
