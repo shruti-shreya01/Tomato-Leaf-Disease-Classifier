@@ -262,11 +262,8 @@ if uploaded_file is not None:
     # Predict the class of the leaf disease
     prediction = model.predict(img_array)
     
-    # Find the predicted class
-    predicted_class = np.argmax(prediction, axis=1)[0]
-    
-    # Calculate confidence score for the predicted class
-    confidence = round(100 * np.max(prediction[0]), 2) 
+    predicted_class = class_names[np.argmax(predictions[0])]
+    confidence = round(100 * (np.max(predictions[0])), 2)
 
     # Store results in session state
     st.session_state["prediction"] = predicted_class
