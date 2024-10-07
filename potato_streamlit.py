@@ -284,9 +284,9 @@ if uploaded_file is not None:
 
     # Predict the class of the leaf disease using the `predict` function
     predicted_class, confidence = predict(model, img)
-
+    disease_name = class_names.get(predicted_class, "Unknown")
     # Display the predicted class and confidence score
-    st.write(f"Predicted Disease: **{predicted_class}**")
+    st.markdown(f"### 🌿 Predicted Disease: **{disease_name}**")
     st.write(f"Confidence Score: **{confidence:.2f}%**")
 
     # Store results in session state
