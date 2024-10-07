@@ -250,6 +250,19 @@ st.write("Welcome farmers! Upload a photo of your potato leaf and let our AI hel
 
 # File uploader for image input
 uploaded_file = st.file_uploader("Select an image of a potato leaf...", type=["jpg", "jpeg", "png"], key="uploaded_file")
+def predict(model, img):
+    # Preprocess the image to be compatible with the model
+    img_array = tf.keras.preprocessing.image.img_to_array(img)
+    img_array = tf.expand_dims(img_array, 0)  # Add batch dimension
+    
+    # Predict the class probabilities
+    predictions = model.predict(img_array)
+    
+    # Get the predicted class and confidence
+    predicted_class = class_names[np.argmax(predictions[0])]
+    confidence = round(100 * (np.max(predictions[0])), 2)  # Convert confidence to percentage and round
+    
+    return predicted_class, confidence
 
 if uploaded_file is not None:
     # Load and preprocess the uploaded image
@@ -260,10 +273,21 @@ if uploaded_file is not None:
     # predicted_class = np.argmax(prediction, axis=1)[0]
     # confidence = np.max(prediction) * 100  # Confidence score in percentage
     # Predict the class of the leaf disease
-    prediction = model.predict(img_array)
-    
-    predicted_class = class_names[np.argmax(predictions[0])]
-    confidence = round(100 * (np.max(predictions[0])), 2)
+# Function to predict the class and confidence score
+
+
+# Streamlit app interface
+
+    # Load and preprocess the uploaded image
+    img = Image.open(uploaded_file).convert('RGB')
+    st.image(img, caption="Uploaded Image", use_column_width=True)
+
+    # Predict the class of the leaf disease using the `predict` function
+    predicted_class, confidence = predict(model, img)
+
+    # Display the predicted class and confidence score
+    st.write(f"Predicted Disease: **{predicted_class}**")
+    st.write(f"Confidence Score: **{confidence:.2f}%**")
 
     # Store results in session state
     st.session_state["prediction"] = predicted_class
@@ -275,9 +299,9 @@ if uploaded_file is not None:
     # Map predicted class to the disease name
     disease_name = class_names.get(predicted_class, "Unknown")
 
-    # Show prediction results
-    st.markdown(f"### 🌿 Predicted Disease: **{disease_name}**")
-    st.markdown(f"### 🔍 Confidence Score: **{confidence:.2f}%**")
+    # # Show prediction results
+    # st.markdown(f"### 🌿 Predicted Disease: **{disease_name}**")
+    # st.markdown(f"### 🔍 Confidence Score: **{confidence:.2f}%**")
 
     # Additional Tips for Farmers
     st.markdown("#### 🛠 Tips:")
