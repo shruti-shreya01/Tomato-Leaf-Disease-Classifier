@@ -255,10 +255,18 @@ if uploaded_file is not None:
     # Load and preprocess the uploaded image
     img_array = load_and_preprocess_image(uploaded_file)
 
+    # # Predict the class of the leaf disease
+    # prediction = model.predict(img_array)
+    # predicted_class = np.argmax(prediction, axis=1)[0]
+    # confidence = np.max(prediction) * 100  # Confidence score in percentage
     # Predict the class of the leaf disease
     prediction = model.predict(img_array)
+    
+    # Find the predicted class
     predicted_class = np.argmax(prediction, axis=1)[0]
-    confidence = np.max(prediction) * 100  # Confidence score in percentage
+    
+    # Calculate confidence score for the predicted class
+    confidence = round(100 * np.max(prediction[0]), 2) 
 
     # Store results in session state
     st.session_state["prediction"] = predicted_class
